@@ -3,6 +3,34 @@ const toggle = document.getElementsByClassName("toggleBut");
 const autoUpdateToggle = document.getElementById("autoUpdate");
 const timeDelay = document.getElementById("timeDelay");
 const svSettings = document.getElementById("svSettingsBtn");
+const menu = document.querySelector("#top-bar .link");
+const leftPane = document.getElementById("left-pane");
+
+function handleScreenAndMenu() {
+  if (leftPane.style.display == "block") {
+    leftPane.style.display = "none";
+    leftPane.style.left = "100%";
+    leftPane.style.right = "";
+  } else {
+    leftPane.style.display = "block";
+    leftPane.style.right = "0";
+    leftPane.style.left = "";
+  }
+}
+
+let smallScreen = window.matchMedia("(max-width: 800px)");
+function smallScreenHandler(x) {
+  if (x.matches) {
+    menu.addEventListener("click", handleScreenAndMenu);
+  } else {
+    menu.removeEventListener("click", handleScreenAndMenu);
+    leftPane.style.display = "";
+    leftPane.style.left = "";
+    leftPane.style.right = "";
+  }
+}
+smallScreenHandler(smallScreen);
+smallScreen.addEventListener("change", smallScreenHandler);
 
 var autoUpdateInterval = null;
 var timeDelayS = "";
