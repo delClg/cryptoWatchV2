@@ -100,8 +100,8 @@ async function updateData() {
     "https://data.messari.io/api/v1/assets?fields=id,slug,symbol,metrics/market_data/price_usd"
   ).then((res) => {
     res.json().then((data) => {
-      for (let i = 0; i < 1; i++) {
-        for (let j = 0; j < 1; j++) {
+      for (let i = 0; i < cryptos.length; i++) {
+        for (let j = 0; j < data.data.length; j++) {
           if (cryptos[i].querySelector("h2").innerHTML == data.data[j].slug) {
             cryptos[i].querySelector(
               "p"
