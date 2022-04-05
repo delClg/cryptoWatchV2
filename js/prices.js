@@ -58,7 +58,9 @@ fetch(
 ).then((res) => {
   res.json().then((data) => {
     for (let i = 0; i < data.data.length; i++) {
-      pvData[data.data[i].slug] = data.data[i].metrics.market_data.price_usd;
+      pvData[data.data[i].slug] = parseFloat(
+        data.data[i].metrics.market_data.price_usd
+      );
       addCryptoData(
         data.data[i].slug,
         data.data[i].symbol,
@@ -98,15 +100,18 @@ async function updateData() {
     "https://data.messari.io/api/v1/assets?fields=id,slug,symbol,metrics/market_data/price_usd"
   ).then((res) => {
     res.json().then((data) => {
-      for (let i = 0; i < cryptos.length; i++) {
-        for (let j = 0; j < data.data.length; j++) {
+      for (let i = 0; i < 1; i++) {
+        for (let j = 0; j < 1; j++) {
           if (cryptos[i].querySelector("h2").innerHTML == data.data[j].slug) {
             cryptos[i].querySelector(
               "p"
             ).innerHTML = `Price: $${data.data[j].metrics.market_data.price_usd}`;
             let price = cryptos[i].querySelector("h2").innerHTML;
             if (pvData.hasOwnProperty(price)) {
-              if (pvData[price] > data.data[j].metrics.market_data.price_usd) {
+              if (
+                pvData[price] <
+                parseFloat(data.data[j].metrics.market_data.price_usd)
+              ) {
                 // cryptos[i]
                 //     .querySelector(".price")
                 //     .className.match(/(?:^|\s)MyClass(?!\S)/)
@@ -118,6 +123,10 @@ async function updateData() {
                   .className.replace(/(?:^|\s)decText(?!\S)/g, "");
                 cryptos[i].querySelector(".price").className += " incText";
               } else {
+                // console.log(
+                //   pvData[price],
+                //   parseFloat(data.data[j].metrics.market_data.price_usd)
+                // );
                 cryptos[i].querySelector(".price").className = cryptos[i]
                   .querySelector(".price")
                   .className.replace(/(?:^|\s)decText(?!\S)/g, "");
@@ -130,6 +139,11 @@ async function updateData() {
             break;
           }
         }
+      }
+      for (let i = 0; i < data.data.length; i++) {
+        pvData[data.data[i].slug] = parseFloat(
+          data.data[i].metrics.market_data.price_usd
+        );
       }
     });
   });

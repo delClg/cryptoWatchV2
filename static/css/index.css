@@ -6,6 +6,8 @@
   --bg-color: #001529;
   --footer-height: 100px;
   --text-primary: #000;
+  --heading-primary: #1890ff;
+  --heading-primary-dark: #0071bd;
   --bgPrimary: #fff;
   --bgSecondary: #f9f9f9;
   --pink: #0071bd;
@@ -64,6 +66,10 @@ a:hover {
 }
 #mainTitle {
   font-weight: 300;
+  color: var(--heading-primary);
+}
+#mainTitle:hover {
+  color: var(--heading-primary-dark);
 }
 main {
   display: flex;
