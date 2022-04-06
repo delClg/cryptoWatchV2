@@ -5,16 +5,37 @@ const timeDelay = document.getElementById("timeDelay");
 const svSettings = document.getElementById("svSettingsBtn");
 const menu = document.querySelector("#top-bar .link");
 const leftPane = document.getElementById("left-pane");
+const modalBackground = document.getElementById("modal");
+const body = document.getElementsByTagName("body")[0];
 
 function handleScreenAndMenu() {
   if (leftPane.style.display == "block") {
     leftPane.style.display = "none";
     leftPane.style.left = "100%";
     leftPane.style.right = "";
+    modalBackground.style.display = "none";
+    // enableScroll(modalBackground);
+    body.style.position = "";
   } else {
     leftPane.style.display = "block";
     leftPane.style.right = "0";
     leftPane.style.left = "";
+    modalBackground.style.display = "block";
+    modalBackground.addEventListener("click", outsideTouch);
+    // disableScroll(modalBackground);
+    body.style.position = "fixed";
+  }
+}
+
+function outsideTouch(e) {
+  if (e.target == modalBackground) {
+    modalBackground.style.display = "none";
+    leftPane.style.display = "none";
+    leftPane.style.left = "100%";
+    leftPane.style.right = "";
+    modalBackground.removeEventListener("click", outsideTouch);
+    // enableScroll(modalBackground);
+    body.style.position = "";
   }
 }
 
@@ -218,3 +239,54 @@ const clearAsyncInterval = (intervalIndex) => {
 //   await promise;
 //   console.log("end");
 // }, 1000);
+
+// Code to stop scroll
+
+// left: 37, up: 38, right: 39, down: 40,
+// spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
+var keys = { 37: 1, 38: 1, 39: 1, 40: 1 };
+
+function preventDefault(e) {
+  e.preventDefault();
+}
+
+function preventDefaultForScrollKeys(e) {
+  if (keys[e.keyCode]) {
+    preventDefault(e);
+    return false;
+  }
+}
+
+// modern Chrome requires { passive: false } when adding event
+var supportsPassive = false;
+try {
+  window.addEventListener(
+    "test",
+    null,
+    Object.defineProperty({}, "passive", {
+      get: function () {
+        supportsPassive = true;
+      },
+    })
+  );
+} catch (e) {}
+
+var wheelOpt = supportsPassive ? { passive: false } : false;
+var wheelEvent =
+  "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
+
+// call this to Disable
+function disableScroll(x) {
+  x.addEventListener("DOMMouseScroll", preventDefault, false); // older FF
+  x.addEventListener(wheelEvent, preventDefault, wheelOpt); // modern desktop
+  x.addEventListener("touchmove", preventDefault, wheelOpt); // mobile
+  x.addEventListener("keydown", preventDefaultForScrollKeys, false);
+}
+
+// call this to Enable
+function enableScroll(x) {
+  x.removeEventListener("DOMMouseScroll", preventDefault, false);
+  x.removeEventListener(wheelEvent, preventDefault, wheelOpt);
+  x.removeEventListener("touchmove", preventDefault, wheelOpt);
+  x.removeEventListener("keydown", preventDefaultForScrollKeys, false);
+}
